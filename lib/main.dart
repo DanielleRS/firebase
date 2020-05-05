@@ -6,6 +6,21 @@ void main() async {
 
   Firestore db = Firestore.instance;
 
+  QuerySnapshot querySnapshot = await db.collection("usuarios")
+    //.where("nome", isEqualTo: "jamilton")
+    //.where("idade", isEqualTo: 31)
+    .where("idade", isGreaterThan: 15)
+    //.where("idade", isLessThan: 30)
+    .orderBy("idade", descending: true)
+    .orderBy("nome", descending: false)
+    .limit(1)
+    .getDocuments();
+
+  for(DocumentSnapshot item in querySnapshot.documents){
+    var dados = item.data;
+    print("filtro nome: ${dados["nome"]} idade: ${dados["idade"]}");
+  }
+
   //Adicionar inserindo o código
   /*
   db.collection("usuarios")
@@ -62,6 +77,7 @@ void main() async {
   }*/
 
   //Recupera dados e notifica sempre que há mudança
+  /*
   db.collection("usuarios").snapshots().listen(
       (snapshot){
         for(DocumentSnapshot item in snapshot.documents) {
@@ -69,7 +85,7 @@ void main() async {
           print("dados usuarios: " + dados["nome"] +  " - " +  dados["idade"]);
         }
       }
-  );
+  );*/
 
   runApp(App());
 }
