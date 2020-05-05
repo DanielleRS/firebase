@@ -6,14 +6,18 @@ void main() async {
 
   Firestore db = Firestore.instance;
 
+  var pesquisa = "an";
   QuerySnapshot querySnapshot = await db.collection("usuarios")
     //.where("nome", isEqualTo: "jamilton")
     //.where("idade", isEqualTo: 31)
-    .where("idade", isGreaterThan: 15)
+    //.where("idade", isGreaterThan: 15)
     //.where("idade", isLessThan: 30)
-    .orderBy("idade", descending: true)
-    .orderBy("nome", descending: false)
-    .limit(1)
+    //.orderBy("idade", descending: true)
+    //.orderBy("nome", descending: false)
+    //.limit(1)
+
+    .where("nome", isGreaterThanOrEqualTo: pesquisa)
+    .where("nome", isLessThanOrEqualTo: pesquisa + "\uf8ff")
     .getDocuments();
 
   for(DocumentSnapshot item in querySnapshot.documents){
