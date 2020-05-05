@@ -6,6 +6,7 @@ void main() async {
 
   Firestore db = Firestore.instance;
 
+  //Adicionar inserindo o código
   /*
   db.collection("usuarios")
     .document("002")
@@ -14,6 +15,7 @@ void main() async {
       "idade": "25"
     });*/
 
+  //Adicionar gerando código automático
   /*
   DocumentReference ref = await db.collection("noticias")
   .add({
@@ -23,12 +25,51 @@ void main() async {
 
   //print("item salvo: " + ref.documentID);
 
+  //Atualizar
+  /*
   db.collection("noticias")
     .document("2HR83NA7Si5hUEubrbUf")
     .setData({
       "titulo": "Ondas de calor em São Paulo alterado",
       "descricao": "texto de exemplo..."
-    });
+    });*/
+
+  //Remover
+  //db.collection("usuarios").document("003").delete();
+
+  //Recuperar dados de um determinado usuário
+  /*
+  DocumentSnapshot snapshot = await db.collection("usuarios")
+      .document("002")
+      .get();
+
+  var dados = snapshot.data;
+  print("dados nome: " + dados["nome"] + " idade: " + dados["idade"]);
+  */
+
+  //Recuperar todos os dados de uma coleção
+  /*
+  QuerySnapshot querySnapshot = await db
+      .collection("usuarios")
+      .getDocuments();*/
+
+  //print("dados usuarios: " + querySnapshot.documents.toString());
+
+  /*
+  for(DocumentSnapshot item in querySnapshot.documents) {
+    var dados = item.data;
+    print("dados usuarios: " + dados["nome"] +  " - " +  dados["idade"]);
+  }*/
+
+  //Recupera dados e notifica sempre que há mudança
+  db.collection("usuarios").snapshots().listen(
+      (snapshot){
+        for(DocumentSnapshot item in snapshot.documents) {
+          var dados = item.data;
+          print("dados usuarios: " + dados["nome"] +  " - " +  dados["idade"]);
+        }
+      }
+  );
 
   runApp(App());
 }
