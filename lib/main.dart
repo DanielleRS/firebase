@@ -1,55 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsFlutterBinding.ensureInitialized();
 
-  FirebaseAuth auth = FirebaseAuth.instance;
-
-  //Criando usuário com e-mail e senha
-  String email = "daniellerodris@gmail.com";
-  String senha = "123456";
-
-  /*
-  auth.createUserWithEmailAndPassword(
-      email: email, 
-      password: senha
-  ).then((firebaseUser){
-    print("novo usuario: sucesso!! e-mail: " + firebaseUser.email);
-  }).catchError((erro){
-    print("novo usuario: erro " + erro.toString());
-  });*/
-
-  //Verificação de usuário logado
-
-  auth.signOut();
-
-  //Logando usuário
-  /*
-  auth.signInWithEmailAndPassword(
-      email: email,
-      password: senha
-  ).then((firebaseUser){
-    print("Logar usuario: sucesso!! e-mail: " + firebaseUser.email);
-  }).catchError((erro){
-    print("Logar usuario: erro " + erro.toString());
-  });*/
-
-
-  FirebaseUser usuarioAtual = await auth.currentUser();
-  if(usuarioAtual != null){ //logado
-    print("Usuario atual logado email: " + usuarioAtual.email);
-  } else{ //deslogado
-    print("Usuario atual está DESLOGADO!!");
-  }
-
-  runApp(App());
+  runApp(MaterialApp(
+    home: Home(),
+  ));
 }
 
-class App extends StatelessWidget {
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  File _imagem;
+
+  Future _recuperarImagem(bool daCamera) async {
+    File imagemSelecionada;
+
+    if(daCamera){ //camera
+      imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.camera);
+    } else { //galeria
+      imagemSelecionada = await ImagePicker.pickImage(source: ImageSource.gallery);
+    }
+
+    setState(() {
+      _imagem = imagemSelecionada;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Selecionar imagem"),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            RaisedButton(
+              child: Text("Camera"),
+              onPressed: (){
+                _recuperarImagem(true);
+              },
+            ),
+            RaisedButton(
+              child: Text("Galeria"),
+              onPressed: (){
+                _recuperarImagem(false);
+              },
+            ),
+            _imagem == null
+            ? Container()
+                : Image.file(_imagem)
+          ],
+        ),
+      ),
+    );
   }
 }
+
